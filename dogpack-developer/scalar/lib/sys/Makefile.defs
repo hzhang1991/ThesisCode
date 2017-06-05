@@ -1,0 +1,36 @@
+# config specifies the compiler
+
+include $(DOGPACK)/config/Makefile.config
+
+# where this library lives
+LIB_SYS = $(DOGPACK)/lib/sys
+
+# define inherited symbols
+#
+LIB_SYS_INCLUDE = -I$(LIB_SYS)
+#
+LIB_SYS_OBJECTS = \
+  $(LIB_SYS)/debug.o \
+  $(LIB_SYS)/assert.o \
+  $(LIB_SYS)/fcmp.o \
+  $(LIB_SYS)/ext_time.o \
+  $(LIB_SYS)/getdelim.o \
+  $(LIB_SYS)/IniDocument.o \
+#
+LIB_SYS_SOURCES = \
+  $(LIB_SYS)/*.h \
+  $(LIB_SYS)/*.c \
+  $(LIB_SYS)/*.cpp \
+
+# inheriting libraries and applications are expected to override these
+#
+INCLUDE_LIBS= $(LIB_SYS_INCLUDE)
+ALL_SOURCES = $(LIB_SYS_SOURCES)
+ALL_OBJECTS = $(LIB_SYS_OBJECTS)
+
+# inheriting libraries and applications can override these
+#
+TAGSOURCES = $(ALL_SOURCES)
+CLEAN_FILES = *.o *.aux *.log *.exe tags cscope*
+CLEAN_TARGETS =
+

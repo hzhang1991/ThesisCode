@@ -1,0 +1,390 @@
+
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=2
+include $(DOGPACK)/lib/Makefile.defs
+
+#
+# libraries this file is for
+#
+LIB2D_UNST = $(DOGPACK)/lib/2d/unst
+#
+# must turn on unstructured stuff
+ifeq ($(COMPILE_WITH_UNST), 1)
+  INCLUDE_LIB2D_UNST = -I$(LIB2D_UNST)
+endif
+
+LIB2D_CART = $(DOGPACK)/lib/2d/cart
+LIB2D      = $(DOGPACK)/lib/2d
+
+# how these libraries inherit
+LIB2D_INCLUDE = \
+  $(INCLUDE_LIB2D_UNST) -I$(LIB2D_CART) \
+  -I$(LIB2D) \
+  $(TOPLIB_INCLUDE)
+
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB2D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB2D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB2D_SOURCES)
+
+# default locations for expected application files
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# as-yet unnecessary definition and then overriding it
+# in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+ProjectLeftEig  = ProjectLeftEig
+ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+  $(ProjectLeftEig).o \
+  $(ProjectRightEig).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+  $(ProjectLeftEig).cpp \
+  $(ProjectRightEig).cpp \
+
+# default library files that applications might override
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB2D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+RiemannSolve         = $(LIB2D)/RiemannSolveLLF
+#RiemannSolve         = $(LIB2D)/RiemannSolve
+SetBndFlux           = $(LIB2D)/SetBndFlux
+InitApp              = $(LIB2D)/InitApp
+DFluxFunc            = $(LIB2D)/LaxWendroff/DFluxFunc
+D2FluxFunc           = $(LIB2D)/LaxWendroff/D2FluxFunc
+RiemannSolveLxW      = $(LIB2D)/LaxWendroff/RiemannSolveLxW_HLL
+
+#
+BeforeStep           = $(LIB2D_CART)/BeforeStep
+AfterStep            = $(LIB2D_CART)/AfterStep
+AfterUpdateSoln      = $(LIB2D_CART)/AfterUpdateSoln
+AfterQinit           = $(LIB2D_CART)/AfterQinit
+AfterFullTimeStep    = $(LIB2D_CART)/AfterFullTimeStep
+AfterReject          = $(LIB2D_CART)/AfterReject
+Qinit_restart        = $(LIB2D_CART)/Qinit_restart
+ConSoln              = $(LIB2D_CART)/ConSoln
+ConstructL           = $(LIB2D_CART)/ConstructL
+ConstructL_LLF       = $(LIB2D_CART)/ConstructL_LLF
+ApplyLimiter         = $(LIB2D_CART)/ApplyShockLimiter
+ApplyScalarLimiter   = $(LIB2D_CART)/ApplyScalarLimiter
+ApplyPosLimiter      = $(LIB2D_CART)/ApplyPosLimiter
+ApplyPosMPPLimiter   = $(LIB2D_CART)/ApplyPosMPPLimiter
+ArtificialViscosity  = $(LIB2D_CART)/ArtificialViscosity
+ConvertQtoW          = $(LIB2D_CART)/ConvertQtoW
+ConvertWtoQ          = $(LIB2D_CART)/ConvertWtoQ
+LstarExtra           = $(LIB2D_CART)/LstarExtra
+L2Project            = $(LIB2D_CART)/L2Project
+L2ProjectGrad        = $(LIB2D_CART)/L2ProjectGrad
+GetCFL               = $(LIB2D_CART)/GetCFL
+Output_Extra         = $(LIB2D_CART)/Output_Extra
+Limiters             = $(LIB2D_CART)/Limiters
+SetBndFluxes         = $(LIB2D_CART)/SetBndFluxes
+
+# Routines needed for Lax-Wendroff (and multiderivative) time stepping:
+DogSolveLxW          = $(LIB2D_CART)/DogSolveLxW
+LaxWendroff          = $(LIB2D_CART)/LaxWendroff/LaxWendroff
+LaxWendroffTD        = $(LIB2D_CART)/LaxWendroff/LaxWendroffTD
+L2ProjectLxW         = $(LIB2D_CART)/LaxWendroff/L2ProjectLxW
+L2ProjectLxWTD       = $(LIB2D_CART)/LaxWendroff/L2ProjectLxWTD
+
+#
+ifeq ($(COMPILE_WITH_UNST), 1)
+AfterQinit_Unst        = $(LIB2D_UNST)/AfterQinit_Unst
+BeforeStep_Unst        = $(LIB2D_UNST)/BeforeStep_Unst
+AfterStep_Unst         = $(LIB2D_UNST)/AfterStep_Unst
+AfterFullTimeStep_Unst = $(LIB2D_UNST)/AfterFullTimeStep_Unst
+AfterReject_Unst       = $(LIB2D_UNST)/AfterReject_Unst
+AfterUpdateSoln_Unst   = $(LIB2D_UNST)/AfterUpdateSoln_Unst
+Output_Unst            = $(LIB2D_UNST)/Output_Unst
+ConSoln_Unst           = $(LIB2D_UNST)/ConSoln_Unst
+ConstructL_Unst        = $(LIB2D_UNST)/ConstructL_Unst
+ConstructL_LLF_Unst    = $(LIB2D_UNST)/ConstructL_LLF_Unst
+LstarExtra_Unst        = $(LIB2D_UNST)/LstarExtra_Unst
+L2Project_Unst         = $(LIB2D_UNST)/L2Project_Unst
+L2ProjectGrad_Unst     = $(LIB2D_UNST)/L2ProjectGrad_Unst
+SetBndValues_Unst      = $(LIB2D_UNST)/SetBndValues_Unst
+RunDogpack_Unst        = $(LIB2D_UNST)/RunDogpack_Unst
+SetEdgeData_Unst       = $(LIB2D_UNST)/SetEdgeData_Unst
+SetEdgeDataGL_Unst     = $(LIB2D_UNST)/SetEdgeDataGL_Unst
+ApplyLimiter_Unst      = $(LIB2D_UNST)/ApplyBarJespLimiter_Unst
+ApplyShockLimiter_Unst = $(LIB2D_UNST)/ApplyShockLimiter_Unst
+ApplyPosLimiter_Unst   = $(LIB2D_UNST)/ApplyPosLimiter_Unst
+ApplyPosMPPLimiter_Unst= $(LIB2D_UNST)/ApplyPosMPPLimiter_Unst
+Legendre2d_Unst        = $(LIB2D_UNST)/Legendre2d_Unst
+DogSolveLxW_Unst       = $(LIB2D_UNST)/DogSolveLxW_Unst
+DogSolveUser_Unst      = $(LIB2D_UNST)/DogSolveUser_Unst
+L2ProjectLxW_Unst      = $(LIB2D_UNST)/LaxWendroff/L2ProjectLxW_Unst
+LaxWendroff_Unst       = $(LIB2D_UNST)/LaxWendroff/LaxWendroff_Unst
+GetCFL_Unst            = $(LIB2D_UNST)/GetCFL_Unst
+endif
+#
+DogSolveUser           = $(LIB2D_CART)/DogSolveUser
+#
+HDF5                 = $(LIB2D_CART)/HDF5
+HDF5o                = $(HDF5).o
+HDF5cpp              = $(HDF5).cpp
+
+LIB2D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(HDF5o) \
+  $(LIB_CARTESIAN_OBJECTS_COMMON) \
+  $(LIB_UNSTRUCTURED_OBJECTS_COMMON) \
+  $(LIB2D)/main_global.o \
+  $(LIB2D)/SetRKinfo.o \
+  $(BeforeStep).o \
+  $(AfterStep).o \
+  $(AfterUpdateSoln).o \
+  $(AfterFullTimeStep).o \
+  $(AfterReject).o \
+  $(LstarExtra).o \
+  $(Qinit_restart).o \
+  $(ConSoln).o \
+  $(ConstructL).o \
+  $(ConstructL_LLF).o \
+  $(RiemannSolve).o \
+  $(SetBndFlux).o \
+  $(InitApp).o \
+  $(ApplyLimiter).o \
+  $(ApplyScalarLimiter).o \
+  $(ApplyPosLimiter).o \
+  $(ApplyPosMPPLimiter).o \
+  $(ArtificialViscosity).o \
+  $(ConvertQtoW).o \
+  $(ConvertWtoQ).o \
+  $(DFluxFunc).o \
+  $(D2FluxFunc).o \
+  $(RiemannSolveLxW).o \
+  $(SetBndFluxes).o \
+
+LIB_CARTESIAN_OBJECTS_COMMON = \
+  $(Limiters).o \
+  $(LIB2D_CART)/Legendre2d.o \
+  $(LIB2D_CART)/DogSolverCart2.o \
+  $(LIB2D_CART)/DogParamsCart2.o \
+  $(LIB2D_CART)/DogStateCart2.o \
+  $(LIB2D_CART)/GridSetup.o \
+  $(L2Project).o \
+  $(L2ProjectGrad).o \
+  $(LIB2D_CART)/SetAux_restart.o \
+  $(LIB2D_CART)/DogSolveSDC.o \
+  $(DogSolveLxW).o \
+  $(DogSolveUser).o \
+  $(LIB2D_CART)/StepSDC.o \
+  $(LIB2D_CART)/ResInt.o \
+  $(LIB2D_CART)/IntegrateQ1d.o \
+  $(LIB2D_CART)/ConvertQ1dToQ2d.o \
+  $(LIB2D_CART)/CopyQ.o \
+  $(GetCFL).o \
+  $(LIB2D_CART)/UpdateSoln.o \
+  $(LIB2D_CART)/edge_data.o \
+  $(AfterQinit).o \
+  $(Output_Extra).o \
+  $(LaxWendroff).o \
+  $(LaxWendroffTD).o \
+  $(L2ProjectLxW).o \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+LIB_UNSTRUCTURED_OBJECTS_COMMON = \
+  $(Legendre2d_Unst).o \
+  $(LIB2D_UNST)/DogParamsUnst2.o \
+  $(LIB2D_UNST)/DogStateUnst2.o \
+  $(LIB2D_UNST)/RunMeshCopyScript.o \
+  $(RunDogpack_Unst).o \
+  $(LIB2D_UNST)/DogSolveRK_Unst.o \
+  $(DogSolveLxW_Unst).o \
+  $(DogSolveUser_Unst).o \
+  $(L2ProjectLxW_Unst).o \
+  $(LaxWendroff_Unst).o \
+  $(LIB2D_UNST)/CopyQ_Unst.o \
+  $(GetCFL_Unst).o \
+  $(LIB2D_UNST)/UpdateSoln_Unst.o \
+  $(LIB2D_UNST)/mesh.o \
+  $(LIB2D_UNST)/SetAux_Unst_restart.o \
+  $(LIB2D_UNST)/Qinit_Unst_restart.o \
+  $(LIB2D_UNST)/edge_data_Unst.o \
+  $(SetEdgeData_Unst).o \
+  $(SetEdgeDataGL_Unst).o \
+  $(AfterQinit_Unst).o \
+  $(BeforeStep_Unst).o \
+  $(AfterStep_Unst).o \
+  $(AfterFullTimeStep_Unst).o \
+  $(AfterReject_Unst).o \
+  $(AfterUpdateSoln_Unst).o \
+  $(Output_Unst).o \
+  $(ConSoln_Unst).o \
+  $(ConstructL_Unst).o \
+  $(ConstructL_LLF_Unst).o \
+  $(LstarExtra_Unst).o \
+  $(L2Project_Unst).o \
+  $(L2ProjectGrad_Unst).o \
+  $(SetBndValues_Unst).o \
+  $(ApplyLimiter_Unst).o \
+  $(ApplyShockLimiter_Unst).o \
+  $(ApplyPosLimiter_Unst).o \
+  $(ApplyPosMPPLimiter_Unst).o \
+
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+
+LIB_UNSTRUCTURED_OBJECTS_COMMON = \
+  $(LIB2D_UNST)/dummy_RunDogpack_Unst.o \
+
+endif
+
+LIB2D_SOURCES = \
+  $(DOGPACK)/lib/2d/*.h \
+  $(TOPLIB_SOURCES) \
+  $(HDF5cpp) \
+  $(LIB_CARTESIAN_SOURCES_COMMON) \
+  $(LIB_UNSTRUCTURED_SOURCES_COMMON) \
+  $(LIB2D)/main_global.cpp \
+  $(LIB2D)/SetRKinfo.cpp \
+  $(BeforeStep).cpp \
+  $(AfterStep).cpp \
+  $(AfterUpdateSoln).cpp \
+  $(AfterFullTimeStep).cpp \
+  $(AfterReject).cpp \
+  $(LstarExtra).cpp \
+  $(Qinit_restart).cpp \
+  $(ConSoln).cpp \
+  $(ConstructL).cpp \
+  $(ConstructL_LLF).cpp \
+  $(RiemannSolve).cpp \
+  $(SetBndFlux).cpp \
+  $(InitApp).cpp \
+  $(ApplyLimiter).cpp \
+  $(ApplyScalarLimiter).cpp \
+  $(ApplyPosLimiter).cpp \
+  $(ApplyPosMPPLimiter).cpp \
+  $(ArtificialViscosity).cpp \
+  $(ConvertQtoW).cpp \
+  $(ConvertWtoQ).cpp \
+  $(DFluxFunc).cpp \
+  $(D2FluxFunc).cpp \
+  $(RiemannSolveLxW).cpp \
+  $(SetBndFluxes).cpp \
+
+LIB_CARTESIAN_SOURCES_COMMON = \
+  $(LIB2D_CART)/*.h \
+  $(Limiters).cpp \
+  $(LIB2D_CART)/Legendre2d.cpp \
+  $(LIB2D_CART)/DogSolverCart2.cpp \
+  $(LIB2D_CART)/DogParamsCart2.cpp \
+  $(LIB2D_CART)/DogStateCart2.cpp \
+  $(LIB2D_CART)/GridSetup.cpp \
+  $(L2Project).cpp \
+  $(L2ProjectGrad).cpp \
+  $(LIB2D_CART)/L2Project.cpp \
+  $(LIB2D_CART)/SetAux_restart.cpp \
+  $(LIB2D_CART)/DogSolveSDC.cpp \
+  $(DogSolveLxW).cpp \
+  $(DogSolveUser).cpp \
+  $(LIB2D_CART)/StepSDC.cpp \
+  $(LIB2D_CART)/ResInt.cpp \
+  $(LIB2D_CART)/IntegrateQ1d.cpp \
+  $(LIB2D_CART)/ConvertQ1dToQ2d.cpp \
+  $(LIB2D_CART)/CopyQ.cpp \
+  $(GetCFL).cpp \
+  $(LIB2D_CART)/UpdateSoln.cpp \
+  $(LIB2D_CART)/edge_data.cpp \
+  $(AfterQinit).cpp \
+  $(Output_Extra).cpp \
+  $(LaxWendroff).cpp \
+  $(LaxWendroffTD).cpp \
+  $(L2ProjectLxW).cpp \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+LIB_UNSTRUCTURED_SOURCES_COMMON = \
+  $(LIB2D_UNST)/*.h \
+  $(Legendre2d_Unst).cpp \
+  $(LIB2D_UNST)/DogParamsUnst2.cpp \
+  $(LIB2D_UNST)/DogStateUnst2.cpp \
+  $(LIB2D_UNST)/RunMeshCopyScript.cpp \
+  $(RunDogpack_Unst).cpp \
+  $(LIB2D_UNST)/DogSolveRK_Unst.cpp \
+  $(DogSolveLxW_Unst).cpp \
+  $(DogSolveUser_Unst).cpp \
+  $(L2ProjectLxW_Unst).cpp \
+  $(LaxWendroff_Unst).cpp \
+  $(LIB2D_UNST)/CopyQ_Unst.cpp \
+  $(GetCFL_Unst).cpp \
+  $(LIB2D_UNST)/UpdateSoln_Unst.cpp \
+  $(LIB2D_UNST)/mesh.cpp \
+  $(LIB2D_UNST)/SetAux_Unst_restart.cpp \
+  $(LIB2D_UNST)/Qinit_Unst_restart.cpp \
+  $(LIB2D_UNST)/edge_data_Unst.cpp \
+  $(LIB2D_UNST)/SetEdgeData_Unst.cpp \
+  $(AfterQinit_Unst).cpp \
+  $(BeforeStep_Unst).cpp \
+  $(AfterStep_Unst).cpp \
+  $(AfterFullTimeStep_Unst).cpp \
+  $(AfterReject_Unst).cpp \
+  $(AfterUpdateSoln_Unst).cpp \
+  $(Output_Unst).cpp \
+  $(ConSoln_Unst).cpp \
+  $(ConstructL_Unst).cpp \
+  $(ConstructL_LLF_Unst).cpp \
+  $(LstarExtra_Unst).cpp \
+  $(L2Project_Unst).cpp \
+  $(L2ProjectGrad_Unst).cpp \
+  $(SetBndValues_Unst).cpp \
+  $(ApplyLimiter_Unst).cpp \
+  $(ApplyShockLimiter_Unst).cpp \
+  $(ApplyPosLimiter_Unst).cpp \
+  $(ApplyPosMPPLimiter_Unst).cpp \
+
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+
+LIB_UNSTRUCTURED_SOURCES_COMMON = \
+  $(LIB2D_UNST)/dummy_RunDogpack_Unst.cpp \
+
+endif
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data

@@ -1,0 +1,219 @@
+
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=3
+include $(DOGPACK)/lib/Makefile.defs
+
+#
+# libraries this file is for
+#
+LIB3D_UNST = 
+#
+# must turn on unstructured stuff
+ifeq ($(COMPILE_WITH_UNST), 1)
+  INCLUDE_LIB3D_UNST = -I$(LIB3D_UNST)
+endif
+
+LIB3D_CART = $(DOGPACK)/lib/3d/cart
+LIB3D      = $(DOGPACK)/lib/3d
+
+# how these libraries inherit
+LIB3D_INCLUDE = \
+  $(INCLUDE_LIB3D_UNST) -I$(LIB3D_CART) \
+  -I$(LIB3D) \
+  $(TOPLIB_INCLUDE)
+
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB3D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB3D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB3D_SOURCES)
+
+# default locations for expected application files
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# as-yet unnecessary definition and then overriding it
+# in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+ProjectLeftEig  = ProjectLeftEig
+ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+  $(ProjectLeftEig).o \
+  $(ProjectRightEig).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+  $(ProjectLeftEig).cpp \
+  $(ProjectRightEig).cpp \
+
+# default library files that applications might override
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB3D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+RiemannSolve         = $(LIB3D)/RiemannSolve
+InitApp              = $(LIB3D)/InitApp
+#
+BeforeStep           = $(LIB3D_CART)/BeforeStep
+AfterStep            = $(LIB3D_CART)/AfterStep
+AfterUpdateSoln      = $(LIB3D_CART)/AfterUpdateSoln
+AfterQinit           = $(LIB3D_CART)/AfterQinit
+AfterFullTimeStep    = $(LIB3D_CART)/AfterFullTimeStep
+AfterReject          = $(LIB3D_CART)/AfterReject
+ConSoln              = $(LIB3D_CART)/ConSoln
+ConstructL           = $(LIB3D_CART)/ConstructL
+ApplyLimiter         = $(LIB3D_CART)/ApplyLimiter
+ConvertQtoW          = $(LIB3D_CART)/ConvertQtoW
+ConvertWtoQ          = $(LIB3D_CART)/ConvertWtoQ
+Limiters             = $(LIB3D_CART)/Limiters
+LstarExtra           = $(LIB3D_CART)/LstarExtra
+L2Project            = $(LIB3D_CART)/L2Project
+L2ProjectGrad        = $(LIB3D_CART)/L2ProjectGrad
+L2ProjectInitialCond = $(LIB3D_CART)/L2ProjectInitialCond
+GetCFL               = $(LIB3D_CART)/GetCFL
+DogSolveSDC          = $(LIB3D_CART)/DogSolveSDC
+DogSolveLxW          = $(LIB3D_CART)/DogSolveLxW
+DogSolveUser         = $(LIB3D_CART)/DogSolveUser
+Output_Extra         = $(LIB3D_CART)/Output_Extra
+OutSliceExtra        = $(LIB3D_CART)/OutSliceExtra
+
+#
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+#
+
+LIB3D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(LIB_CARTESIAN_OBJECTS_COMMON) \
+  $(LIB_UNSTRUCTURED_OBJECTS_COMMON) \
+  $(LIB3D)/SetRKinfo.o \
+  $(BeforeStep).o \
+  $(AfterStep).o \
+  $(AfterUpdateSoln).o \
+  $(AfterQinit).o \
+  $(AfterFullTimeStep).o \
+  $(AfterReject).o \
+  $(LstarExtra).o \
+  $(ConSoln).o \
+  $(ConstructL).o \
+  $(RiemannSolve).o \
+  $(InitApp).o \
+  $(ApplyLimiter).o \
+  $(ConvertQtoW).o \
+  $(ConvertWtoQ).o \
+  $(L2Project).o \
+  $(L2ProjectGrad).o \
+  $(L2ProjectInitialCond).o \
+  $(GetCFL).o \
+  $(DogSolveSDC).o \
+  $(DogSolveLxW).o \
+  $(DogSolveUser).o \
+  $(Output_Extra).o \
+
+LIB_CARTESIAN_OBJECTS_COMMON = \
+  $(Limiters).o \
+  $(LIB3D_CART)/DogSolverCart3.o \
+  $(LIB3D_CART)/DogParamsCart3.o \
+  $(LIB3D_CART)/DogStateCart3.o \
+  $(LIB3D_CART)/FaceData.o \
+  $(LIB3D_CART)/Legendre3d.o \
+  $(LIB3D_CART)/OutSliceCart3.o \
+  $(OutSliceExtra).o \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+endif
+
+LIB3D_SOURCES = \
+  $(DOGPACK)/lib/3d/*.h \
+  $(TOPLIB_SOURCES) \
+  $(LIB_CARTESIAN_SOURCES_COMMON) \
+  $(LIB_UNSTRUCTURED_SOURCES_COMMON) \
+  $(LIB3D)/SetRKinfo.cpp \
+  $(TOPLIB_OBJECTS) \
+  $(LIB_CARTESIAN_OBJECTS_COMMON) \
+  $(LIB_UNSTRUCTURED_OBJECTS_COMMON) \
+  $(LIB3D)/SetRKinfo.cpp \
+  $(BeforeStep).cpp \
+  $(AfterStep).cpp \
+  $(AfterUpdateSoln).cpp \
+  $(AfterQinit).cpp \
+  $(AfterFullTimeStep).cpp \
+  $(AfterReject).cpp \
+  $(LstarExtra).cpp \
+  $(ConSoln).cpp \
+  $(ConstructL).cpp \
+  $(RiemannSolve).cpp \
+  $(InitApp).cpp \
+  $(ApplyLimiter).cpp \
+  $(ConvertQtoW).cpp \
+  $(ConvertWtoQ).cpp \
+  $(L2Project).cpp \
+  $(L2ProjectGrad).cpp \
+  $(L2ProjectInitialCond).cpp \
+  $(GetCFL).cpp \
+  $(DogSolveSDC).cpp \
+  $(DogSolveLxW).cpp \
+  $(DogSolveUser).cpp \
+  $(Output_Extra).cpp \
+
+LIB_CARTESIAN_SOURCES_COMMON = \
+  $(LIB3D_CART)/*.h \
+  $(Limiters).cpp \
+  $(LIB3D_CART)/DogSolverCart3.cpp \
+  $(LIB3D_CART)/DogParamsCart3.cpp \
+  $(LIB3D_CART)/DogStateCart3.cpp \
+  $(LIB3D_CART)/L2Project.cpp \
+  $(LIB3D_CART)/FaceData.cpp \
+  $(LIB3D_CART)/Legendre3d.cpp \
+  $(LIB3D_CART)/OutSliceCart3.cpp \
+  $(OutSliceExtra).cpp \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+endif
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data

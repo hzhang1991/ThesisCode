@@ -1,0 +1,10 @@
+#!/bin/sh
+
+matlaboutputdir="$1";
+
+# create output directory if it does not exist
+if test ! -d $matlaboutputdir; then
+    mkdir $matlaboutputdir;
+fi
+morefiles="matlab/*.dat"
+cp $morefiles $matlaboutputdir;

@@ -1,0 +1,31 @@
+#!/bin/sh
+echo "
+function out = get_componentNames(vframe)
+  out = vframe.componentNames;
+end
+" > get_componentNames.m
+
+echo "
+function out = get_nameArray(vframe)
+  out = get_nameArray(get_componentNames(subframe));
+end
+" > get_nameArray.m
+
+echo "
+function out = get_vector(vframe)
+  out = vframe.vector;
+end
+" > get_vector.m
+
+echo "
+function out = get_simulation(vframe)
+  out = vframe.simulation;
+end
+" > get_simulation.m
+
+echo "
+function out = get_time(vframe)
+  out = vframe.time;
+end
+" > get_time.m
+

@@ -1,0 +1,7 @@
+include $(DOGPACK)/lib/Makefile.targets
+
+$(HDF5o): $(HDF5cpp)
+	$(COMPILE) \
+        -D COMPILE_WITH_HDF5=$(COMPILE_WITH_HDF5) \
+        $(HDF5_INCLUDES) \
+	$(HDF5cpp) -o $(HDF5o)

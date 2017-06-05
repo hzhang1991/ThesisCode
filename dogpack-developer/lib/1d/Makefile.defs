@@ -1,0 +1,212 @@
+
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=1
+include $(DOGPACK)/lib/Makefile.defs
+# library this file is in
+LIB1D = $(DOGPACK)/lib/1d
+LIB1D_INCLUDE = -I$(LIB1D) $(TOPLIB_INCLUDE)
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB1D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB1D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB1D_SOURCES)
+
+# default locations for expected application files
+#
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# and then overriding it in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+ProjectLeftEig  = ProjectLeftEig
+ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+  $(ProjectLeftEig).o \
+  $(ProjectRightEig).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+  $(ProjectLeftEig).cpp \
+  $(ProjectRightEig).cpp \
+
+# default library files that applications are likely to override
+#
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB1D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+RunDogpack           = $(LIB1D)/RunDogpack
+Output               = $(LIB1D)/Output
+Output_Extra         = $(LIB1D)/Output_Extra
+ConSoln              = $(LIB1D)/ConSoln
+BeforeQinit          = $(LIB1D)/BeforeQinit
+AfterQinit           = $(LIB1D)/AfterQinit
+AfterStep            = $(LIB1D)/AfterStep
+BeforeStep           = $(LIB1D)/BeforeStep
+AfterUpdateSoln      = $(LIB1D)/AfterUpdateSoln
+ApplyLimiter         = $(LIB1D)/ApplyLimiter
+ApplyPosLimiter      = $(LIB1D)/ApplyPosLimiter
+ApplyPosMPPLimiter   = $(LIB1D)/ApplyPosMPPLimiter
+ArtificialViscosity  = $(LIB1D)/ArtificialViscosity
+RelaxLimiter         = $(LIB1D)/RelaxLimiter
+RiemannSolve         = $(LIB1D)/RiemannSolveLLF
+ConstructL           = $(LIB1D)/ConstructL
+ConstructL_LLF       = $(LIB1D)/ConstructL_LLF
+InitApp              = $(LIB1D)/InitApp
+LstarExtra           = $(LIB1D)/LstarExtra
+BeforeFullTimeStep   = $(LIB1D)/BeforeFullTimeStep
+AfterFullTimeStep    = $(LIB1D)/AfterFullTimeStep
+DogSolveUser         = $(LIB1D)/DogSolveUser
+L2Project            = $(LIB1D)/L2Project
+GridSetup            = $(LIB1D)/GridSetup
+
+# Routines needed for Lax-Wendroff (and multiderivative) time stepping:
+DogSolveLxW          = $(LIB1D)/DogSolveLxW
+DFluxFunc            = $(LIB1D)/LaxWendroff/DFluxFunc
+D2FluxFunc           = $(LIB1D)/LaxWendroff/D2FluxFunc
+LaxWendroff          = $(LIB1D)/LaxWendroff/LaxWendroff
+LaxWendroffTD        = $(LIB1D)/LaxWendroff/LaxWendroffTD
+L2ProjectLxW         = $(LIB1D)/LaxWendroff/L2ProjectLxW
+L2ProjectLxWTD       = $(LIB1D)/LaxWendroff/L2ProjectLxWTD
+RiemannSolveLxW      = $(LIB1D)/LaxWendroff/RiemannSolveLxW_LLF
+
+LIB1D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(LIB1D)/main_global.o \
+  $(RunDogpack).o \
+  $(LIB1D)/DogParamsCart1.o \
+  $(GridSetup).o \
+  $(L2Project).o \
+  $(L2ProjectLxW).o \
+  $(L2ProjectLxWTD).o \
+  $(Output).o \
+  $(Output_Extra).o \
+  $(ConSoln).o \
+  $(LIB1D)/DogSolveRK.o \
+  $(LIB1D)/DogSolveSDC.o \
+  $(DogSolveLxW).o \
+  $(DogSolveUser).o \
+  $(LaxWendroff).o \
+  $(LaxWendroffTD).o \
+  $(DFluxFunc).o \
+  $(D2FluxFunc).o \
+  $(LIB1D)/CopyQ.o \
+  $(BeforeQinit).o \
+  $(AfterQinit).o \
+  $(BeforeStep).o \
+  $(AfterStep).o \
+  $(BeforeFullTimeStep).o \
+  $(AfterFullTimeStep).o \
+  $(InitApp).o \
+  $(AfterUpdateSoln).o \
+  $(LstarExtra).o \
+  $(ApplyLimiter).o \
+  $(ApplyPosLimiter).o \
+  $(ApplyPosMPPLimiter).o \
+  $(ArtificialViscosity).o \
+  $(RelaxLimiter).o \
+  $(LIB1D)/ConvertQtoW.o \
+  $(LIB1D)/ConvertWtoQ.o \
+  $(ConstructL).o \
+  $(ConstructL_LLF).o \
+  $(LIB1D)/UpdateSoln.o \
+  $(LIB1D)/TimeStepSDC.o \
+  $(LIB1D)/StepSDC.o \
+  $(LIB1D)/ResInt.o \
+  $(LIB1D)/GetCFL.o \
+  $(RiemannSolve).o \
+  $(RiemannSolveLxW).o \
+  $(LIB1D)/SetRKinfo.o \
+  $(LIB1D)/LaxWendroff/EvalRiemmanData.o \
+  $(LIB1D)/LegendrePolys1d.o \
+
+LIB1D_SOURCES = \
+  $(LIB1D)/*.h \
+  $(TOPLIB_SOURCES) \
+  $(LIB1D)/main_global.cpp \
+  $(RunDogpack).cpp \
+  $(LIB1D)/DogParamsCart1.cpp \
+  $(GridSetup).cpp \
+  $(L2Project).cpp \
+  $(L2ProjectLxW).cpp \
+  $(L2ProjectLxWTD).cpp \
+  $(Output).cpp \
+  $(Output_Extra).cpp \
+  $(ConSoln).cpp \
+  $(LIB1D)/DogSolveRK.cpp \
+  $(LIB1D)/DogSolveSDC.cpp \
+  $(DogSolveLxW).cpp \
+  $(DogSolveUser).cpp \
+  $(LaxWendroff).cpp \
+  $(LaxWendroffTD).cpp \
+  $(DFluxFunc).cpp \
+  $(D2FluxFunc).cpp \
+  $(LIB1D)/CopyQ.cpp \
+  $(BeforeQinit).cpp \
+  $(AfterQinit).cpp \
+  $(BeforeStep).cpp \
+  $(AfterStep).cpp \
+  $(BeforeFullTimeStep).cpp \
+  $(AfterFullTimeStep).cpp \
+  $(InitApp).cpp \
+  $(AfterUpdateSoln).cpp \
+  $(LstarExtra).cpp \
+  $(ApplyLimiter).cpp \
+  $(ApplyPosLimiter).cpp \
+  $(ApplyPosMPPLimiter).cpp \
+  $(ArtificialViscosity).cpp \
+  $(RelaxLimiter).cpp \
+  $(LIB1D)/ConvertQtoW.cpp \
+  $(LIB1D)/ConvertWtoQ.cpp \
+  $(ConstructL).cpp \
+  $(ConstructL_LLF).cpp \
+  $(LIB1D)/UpdateSoln.cpp \
+  $(LIB1D)/TimeStepSDC.cpp \
+  $(LIB1D)/StepSDC.cpp \
+  $(LIB1D)/ResInt.cpp \
+  $(LIB1D)/GetCFL.cpp \
+  $(RiemannSolve).cpp \
+  $(RiemannSolveLxW).cpp \
+  $(LIB1D)/SetRKinfo.cpp \
+  $(LIB1D)/LaxWendroff/EvalRiemmanData.cpp \
+  $(LIB1D)/LegendrePolys1d.cpp \
+

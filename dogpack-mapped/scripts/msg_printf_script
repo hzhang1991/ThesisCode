@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# email message to user.
+
+user=`whoami`
+machine=`hostname`
+message="$1"
+unsubscribe="\n  to quit getting these emails comment out the last line in ${0}"
+
+mail=mail
+# uncomment the next line to email a copy of the error
+# message to the user.
+echo "Message from machine $machine:\n$message $unsubscribe" | $mail -s "message from machine $machine" "$user"
+

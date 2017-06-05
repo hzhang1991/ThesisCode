@@ -1,0 +1,25 @@
+# location of this lib:
+VLASOV_LIB = $(DOGPACK)/scalar/apps/hybrid/VlasovPoisson/lib
+
+# overwrite the include_libs flag:
+INCLUDE_LIBS = $(LIB2D_INCLUDE) $(LIB4D_INCLUDE) $(LIBPOISSON_INCLUDE) -I$(VLASOV_LIB)
+
+# extra stuff this library would like to include:
+AfterQinit_Unst    = $(DOGPACK)/scalar/apps/hybrid/VlasovPoisson/lib/AfterQinit_Unst
+
+# Library objects that are replaced
+PrintElectricField     = $(VLASOV_LIB)/PrintElectricField
+ComputeElectricField   = $(VLASOV_LIB)/ComputeElectricField
+SetBndValues_Unst      = $(VLASOV_LIB)/SetBndValues_Unst
+
+# place to add objects and sources for Vlasov Library
+VlasovParams           = $(VLASOV_LIB)/VlasovParams
+
+VLASOV_LIB_OBJECTS = \
+    $(VlasovParams).o \
+#
+#
+VLASOV_LIB_SOURCES = \
+    $(VLASOV_LIB)/*.h \
+    $(VlasovParams).cpp \
+

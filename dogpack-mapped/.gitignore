@@ -1,0 +1,42 @@
+# compiled object modules
+*.o
+*.pyc
+
+# executables
+*.exe
+
+# output directories
+# TODO - it would be nice to make "output" case sensitive.  On my machine (Mac
+# OS X), this output ignores stuff like "Output.cpp", which is part of the
+# code! (-DS)
+output*
+mesh_output*
+
+# tags files
+tags
+
+# ignore matlab .dat files
+# any reason not to use *.dat?  (-DS)
+P.dat
+L.dat
+Lnz.dat
+R.dat
+Rnz.dat
+
+# image files
+*.jpg
+*.png
+*.eps
+
+# files that text editors produce:
+*.swp
+
+# silly Mac files
+.DS_Store
+
+# bash files
+setenv.bash
+setenv.csh
+
+# emacs trash files
+*~

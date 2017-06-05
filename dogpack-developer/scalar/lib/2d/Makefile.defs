@@ -1,0 +1,199 @@
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+# TODO - this option doesn't make sense for 'hybrid' solvers
+NDIMS=2
+
+include $(DOGPACK)/scalar/lib/Makefile.defs
+
+#
+# libraries this file is for
+#
+LIB2D_UNST              = $(DOGPACK)/scalar/lib/2d/unst
+LIB2D_UNST_MAIN_BRANCH  = $(DOGPACK)/lib/2d/unst
+
+# turn on unstructured stuff if needed
+#ifeq ($(COMPILE_WITH_UNST), 1)
+#  INCLUDE_LIB2D_UNST = -I$(LIB2D_UNST)
+#endif
+#ifeq ($(COMPILE_WITH_UNST), 2)
+#  INCLUDE_LIB2D_UNST = -I$(LIB2D_UNST)
+#endif
+
+LIB2D      = $(DOGPACK)/scalar/lib/2d
+
+# how these libraries inherit
+LIB2D_INCLUDE = $(INCLUDE_LIB2D_UNST) \
+  -I$(LIB2D_UNST) -I$(LIB2D_UNST_MAIN_BRANCH) -I$(LIB2D) \
+  $(TOPLIB_INCLUDE)
+
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB2D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB2D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB2D_SOURCES)
+
+# default locations for expected application files
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# as-yet unnecessary definition and then overriding it
+# in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+
+# SCALAR problems do not need these (we also do not have a limiter)
+#ProjectLeftEig  = ProjectLeftEig
+#ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+
+# default library files that applications might override
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB2D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+
+# common 2d library stuff:
+SetRKinfo              = $(LIB2D)/SetRKinfo
+RiemannSolve           = $(LIB2D)/RiemannSolve
+
+# Unstructured Stuff (Modified for 4D code) :
+#
+# The routines ConstructL_Unst and UpdateSoln_Unst have been separated here in
+# order to remove their #pragma calls
+#
+L2Project_Unst         = $(LIB2D_UNST)/L2Project_Unst
+L2ProjectGrad_Unst     = $(LIB2D_UNST)/L2ProjectGrad_Unst
+ConstructL_Unst        = $(LIB2D_UNST)/ConstructL_Unst
+UpdateSoln_Unst        = $(LIB2D_UNST)/UpdateSoln_Unst
+
+# Items in the 4D code that have since become deprecated because the main branch
+# was updated post creating the "scalar" branch.  One change that was
+# instantiated was replacing C++-strings with C-strings.
+mesh                   = $(LIB2D_UNST)/mesh
+RunMeshCopyScript      = $(LIB2D_UNST)/RunMeshCopyScript
+DogParamsUnst2         = $(LIB2D_UNST)/DogParamsUnst2
+Output_Unst            = $(LIB2D_UNST)/Output_Unst
+
+# Items used in the "main" branch of DoGPack.
+#
+# Unstructured Stuff (main branch) :
+#
+SetBndValues_Unst      = $(LIB2D_UNST_MAIN_BRANCH)/SetBndValues_Unst
+DogStateUnst2          = $(LIB2D_UNST_MAIN_BRANCH)/DogStateUnst2
+ApplyPosLimiter_Unst   = $(LIB2D_UNST_MAIN_BRANCH)/ApplyPosLimiter_Unst
+LstarExtra_Unst        = $(LIB2D_UNST_MAIN_BRANCH)/LstarExtra_Unst
+GetCFL_Unst            = $(LIB2D_UNST_MAIN_BRANCH)/GetCFL_Unst
+SetEdgeData_Unst       = $(LIB2D_UNST_MAIN_BRANCH)/SetEdgeData_Unst
+edge_data_Unst         = $(LIB2D_UNST_MAIN_BRANCH)/edge_data_Unst
+AfterQinit_Unst        = $(LIB2D_UNST_MAIN_BRANCH)/AfterQinit_Unst
+AfterStep_Unst         = $(LIB2D_UNST_MAIN_BRANCH)/AfterStep_Unst
+BeforeStep_Unst        = $(LIB2D_UNST_MAIN_BRANCH)/BeforeStep_Unst
+Wrappers               = $(LIB2D_UNST)/Wrappers
+
+#######################
+# Sources and targets #
+#######################
+
+LIB2D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(LIB_UNST_OBJECTS_COMMON) \
+  $(SetRKinfo).o \
+  $(RiemannSolve).o \
+
+LIB_UNST_OBJECTS_COMMON = \
+  $(mesh).o \
+  $(RunMeshCopyScript).o \
+  $(DogStateUnst2).o \
+  $(DogParamsUnst2).o \
+  $(L2Project_Unst).o \
+  $(Output_Unst).o \
+  $(L2ProjectGrad_Unst).o \
+  $(SetBndValues_Unst).o \
+  $(ConstructL_Unst).o \
+  $(ApplyPosLimiter_Unst).o \
+  $(LstarExtra_Unst).o \
+  $(GetCFL_Unst).o \
+  $(UpdateSoln_Unst).o \
+  $(SetEdgeData_Unst).o \
+  $(edge_data_Unst).o \
+  $(AfterStep_Unst).o \
+  $(BeforeStep_Unst).o \
+  $(Wrappers).o \
+  $(AfterQinit_Unst).o \
+
+LIB2D_SOURCES = \
+  $(DOGPACK)/scalar/lib/2d/*.h \
+  $(TOPLIB_SOURCES) \
+  $(LIB_UNST_SOURCES_COMMON) \
+  $(SetRKinfo).cpp \
+  $(RiemannSolve).cpp \
+
+LIB_UNST_SOURCES_COMMON = \
+  $(LIB2D_UNST)/*.h \
+  $(edge_data_Unst).h \
+  $(DogStateUnst2).h \
+  $(mesh).cpp \
+  $(RunMeshCopyScript).cpp \
+  $(DogStateUnst2).cpp \
+  $(DogParamsUnst2).cpp \
+  $(L2Project_Unst).cpp \
+  $(Output_Unst).cpp \
+  $(L2ProjectGrad_Unst).cpp \
+  $(SetBndValues_Unst).cpp \
+  $(ConstructL_Unst).cpp \
+  $(ApplyPosLimiter_Unst).cpp \
+  $(LstarExtra_Unst).cpp \
+  $(GetCFL_Unst).cpp \
+  $(UpdateSoln_Unst).cpp \
+  $(UpdateSoln_Unst).cpp \
+  $(SetEdgeData_Unst).cpp \
+  $(edge_data_Unst).cpp \
+  $(BeforeStep_Unst).cpp \
+  $(AfterStep_Unst).cpp \
+  $(Wrappers).cpp \
+  $(AfterQinit_Unst).cpp \
+
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data
+

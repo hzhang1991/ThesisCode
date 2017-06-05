@@ -1,0 +1,143 @@
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=4
+
+include $(DOGPACK)/scalar/lib/2d/Makefile.defs
+include $(DOGPACK)/scalar/lib/hybrid/lib_poisson/unst/Makefile.defs
+
+#
+# libraries this file is for
+#
+LIB4D = $(DOGPACK)/scalar/lib/hybrid
+
+# how these libraries inherit
+LIB4D_INCLUDE = -I$(LIB4D)
+
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB2D_INCLUDE) $(LIB4D_INCLUDE) $(LIBPOISSON_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB2D_OBJECTS) $(LIB4D_OBJECTS) $(LIBPOISSON_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB2D_SOURCES) $(LIB4D_SOURCES) $(LIBPOISSON_SOURCES)
+#COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB2D_OBJECTS) $(LIB4D_OBJECTS)
+#COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB2D_SOURCES) $(LIB4D_SOURCES)
+
+# default locations for expected application files
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# as-yet unnecessary definition and then overriding it
+# in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+
+# SCALAR problems do not need these:
+#ProjectLeftEig  = ProjectLeftEig
+#ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+
+# default library files that applications might override
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB2D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+#x = $(LIB4D)/x
+#DogParamsUnst4          = $(LIB4D)/DogParamsUnst4
+DogParamsCart2          = $(LIB4D)/DogParamsCart2
+L2Project               = $(LIB4D)/L2Project
+RunDogpackHybrid        = $(LIB4D)/RunDogpackHybrid
+DogStateHybrid          = $(LIB4D)/DogStateHybrid
+DogSolveHybrid          = $(LIB4D)/DogSolveHybrid
+main_global_hybrid      = $(LIB4D)/main_global_hybrid
+ConvertSlices           = $(LIB4D)/ConvertSlices
+DogSolveRK_Unst_Quiet   = $(LIB4D)/DogSolveRK_Unst_Quiet
+StepAdvecCC             = $(LIB4D)/StepAdvecCC
+Output_Hybrid           = $(LIB4D)/Output_Hybrid
+Output_Hybrid_Extra     = $(LIB4D)/Output_Hybrid_Extra
+SetLocalSpeeds          = $(LIB4D)/SetLocalSpeeds
+ComputeElectricField    = $(LIB4D)/ComputeElectricField
+PrintElectricField      = $(LIB4D)/PrintElectricField
+QuadratureRules         = $(LIB4D)/QuadratureRules
+
+LIB4D_OBJECTS = \
+  $(L2Project).o \
+  $(DogParamsCart2).o \
+  $(RunDogpackHybrid).o \
+  $(main_global_hybrid).o \
+  $(DogSolveHybrid).o \
+  $(DogStateHybrid).o \
+  $(ConvertSlices).o \
+  $(DogSolveRK_Unst_Quiet).o \
+  $(StepAdvecCC).o \
+  $(Output_Hybrid).o \
+  $(Output_Hybrid_Extra).o \
+  $(ComputeElectricField).o \
+  $(SetLocalSpeeds).o \
+  $(PrintElectricField).o \
+  $(QuadratureRules).o \
+
+LIB4D_SOURCES = \
+  $(DOGPACK)/scalar/lib/hybrid/*.h \
+  $(L2Project).cpp \
+  $(DogParamsCart2).cpp \
+  $(RunDogpackHybrid).cpp \
+  $(main_global_hybrid).cpp \
+  $(DogSolveHybrid).cpp \
+  $(DogStateHybrid).cpp \
+  $(ConvertSlices).cpp \
+  $(DogSolveRK_Unst_Quiet).cpp \
+  $(StepAdvecCC).cpp \
+  $(Output_Hybrid).cpp \
+  $(Output_Hybrid_Extra).cpp \
+  $(ComputeElectricField).cpp \
+  $(SetLocalSpeeds).cpp \
+  $(PrintElectricField).cpp \
+  $(QuadratureRules).cpp \
+
+# links to all of the poisson stuff:
+# include $(DOGPACK)/scalar/lib/hybrid/lib_poisson/unst/Makefile.defs
+
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data
+
+

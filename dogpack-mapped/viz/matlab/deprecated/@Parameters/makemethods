@@ -1,0 +1,97 @@
+#!/bin/sh
+echo "
+% return self
+function out = get_parameters(v)
+  out = v;
+end
+" > get_parameters.m
+
+echo "
+% return self's structure
+function out = ret(v)
+  out = v.parameters;
+end
+" > ret.m
+
+echo "
+function out = get_outputdir(v)
+  out = v.parameters.outputdir;
+end
+" > get_outputdir.m
+
+echo "
+function out = get_ndims(v)
+  out = v.parameters.dogParams.ndims;
+end
+" > get_ndims.m
+
+echo "
+function out = get_datafmt(v)
+  out = v.parameters.dogParams.datafmt;
+end
+" > get_datafmt.m
+
+echo "
+function out = get_grid(v)
+  out = v.parameters.grid;
+end
+" > get_grid.m
+
+echo "
+function out = get_mx(v)
+  out = v.parameters.grid.mx;
+end
+" > get_mx.m
+
+echo "
+function out = get_my(v)
+  out = v.parameters.grid.my;
+end
+" > get_my.m
+
+echo "
+function out = get_meqn(v)
+  out = v.parameters.dogParams.meqn;
+end
+" > get_meqn.m
+
+echo "
+function out = get_kmax(v)
+  out = v.parameters.dogParams.kmax;
+end
+" > get_kmax.m
+
+echo "
+function out = get_space_order(v)
+  out = v.parameters.dogParams.space_order;
+end
+" > get_space_order.m
+
+echo "
+function out = get_maux(v)
+  out = v.parameters.dogParams.maux;
+end
+" > get_maux.m
+
+echo "
+function out = get_a_componentNames(v)
+  out = v.parameters.a_componentNames;
+end
+" > get_a_componentNames.m
+
+echo "
+function out = get_q_componentNames(v)
+  out = v.parameters.q_componentNames;
+end
+" > get_q_componentNames.m
+
+echo "
+function out = get_matlab_addpath(v)
+  if(isfield(v.parameters.dogParams, 'matlab_addpath'))
+    out = v.parameters.dogParams.matlab_addpath;
+  else
+    out = '';
+  end
+end
+" > get_matlab_addpath.m
+

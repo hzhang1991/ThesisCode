@@ -1,0 +1,20 @@
+
+Unstructured           : Grid type (Structured vs. Unstructured)
+0.0085                : Initial grid spacing (H0)
+50000                 : Maximum allowed iterations
+0                     : Create a submesh with given integer refinement factor
+----------------------------------------------------------------
+Bounding box:
+  -1.1e0                : xmin
+  1.1e0                : xmax
+  -1.1e0                : ymin
+  1.1e0                : ymax
+----------------------------------------------------------------
+4                     : Number of fixed points
+----------------------------------------------------------------
+Fixed points (x y):
+ 0.0e0    1.1e0
+ 0.0e0    -1.1e0
+ -1.1e0    0.0e0
+ 1.1e0    0.0e0
+

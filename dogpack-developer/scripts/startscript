@@ -1,0 +1,34 @@
+#!/bin/sh
+
+outputdir="$1";
+dims="$2";
+
+# create output directory if it does not exist
+# TODO - this script isn't incredibly robust.  If two (or more) folders need to
+# be created then this script fails ... (-DS)
+if test ! -d $outputdir;
+  then mkdir $outputdir;
+fi
+
+# copy parameter (".data") files to output directory
+#if test -f param.data; then
+#   morefiles=param.data;
+#else
+#   morefiles="";
+#fi
+# put files in the output directory that
+# we use it to select what modules are used
+if test -f Makefile; then
+   morefiles="Makefile $morefiles";
+fi
+if test -f Initialize.cpp; then
+   morefiles="Initialize.cpp $morefiles";
+fi
+if test -f mesh.dat; then
+   morefiles="mesh.dat $morefiles";
+fi
+cp $morefiles parameters.ini $outputdir;
+
+# copy information sufficient to reconstruct the
+# code used to generate the data
+make -s diff > $outputdir/git_diff

@@ -1,0 +1,218 @@
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=4
+include $(DOGPACK)/lib/Makefile.defs
+
+#
+# libraries this file is for
+#
+LIB4D_UNST = 
+#
+# must turn on unstructured stuff
+ifeq ($(COMPILE_WITH_UNST), 1)
+  INCLUDE_LIB4D_UNST = -I$(LIB4D_UNST)
+endif
+
+LIB4D_CART = $(DOGPACK)/lib/4d/cart
+LIB4D      = $(DOGPACK)/lib/4d
+
+# how these libraries inherit
+LIB4D_INCLUDE = \
+  $(INCLUDE_LIB4D_UNST) -I$(LIB4D_CART) \
+  -I$(LIB4D) \
+  $(TOPLIB_INCLUDE)
+
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB4D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB4D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB4D_SOURCES)
+
+# default locations for expected application files
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# as-yet unnecessary definition and then overriding it
+# in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+SetBndValues    = SetBndValues
+ProjectLeftEig  = ProjectLeftEig
+ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(SetBndValues).o \
+  $(ProjectLeftEig).o \
+  $(ProjectRightEig).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(SetBndValues).cpp \
+  $(ProjectLeftEig).cpp \
+  $(ProjectRightEig).cpp \
+
+# default library files that applications might override
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIB4D_OBJECTS in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+RiemannSolve         = $(LIB4D)/RiemannSolve
+InitApp              = $(LIB4D)/InitApp
+#
+BeforeStep           = $(LIB4D_CART)/BeforeStep
+AfterStep            = $(LIB4D_CART)/AfterStep
+AfterUpdateSoln      = $(LIB4D_CART)/AfterUpdateSoln
+AfterQinit           = $(LIB4D_CART)/AfterQinit
+AfterFullTimeStep    = $(LIB4D_CART)/AfterFullTimeStep
+AfterReject          = $(LIB4D_CART)/AfterReject
+ConSoln              = $(LIB4D_CART)/ConSoln
+ConstructL           = $(LIB4D_CART)/ConstructL
+ApplyLimiter         = $(LIB4D_CART)/ApplyLimiter
+ConvertQtoW          = $(LIB4D_CART)/ConvertQtoW
+ConvertWtoQ          = $(LIB4D_CART)/ConvertWtoQ
+Limiters             = $(LIB4D_CART)/Limiters
+LstarExtra           = $(LIB4D_CART)/LstarExtra
+L2Project            = $(LIB4D_CART)/L2Project
+L2ProjectGrad        = $(LIB4D_CART)/L2ProjectGrad
+L2ProjectInitialCond = $(LIB4D_CART)/L2ProjectInitialCond
+GetCFL               = $(LIB4D_CART)/GetCFL
+DogSolveSDC          = $(LIB4D_CART)/DogSolveSDC
+DogSolveLxW          = $(LIB4D_CART)/DogSolveLxW
+DogSolveUser         = $(LIB4D_CART)/DogSolveUser
+Output_Extra         = $(LIB4D_CART)/Output_Extra
+OutSliceExtra        = $(LIB4D_CART)/OutSliceExtra
+
+#
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+#
+
+LIB4D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(LIB_CARTESIAN_OBJECTS_COMMON) \
+  $(LIB_UNSTRUCTURED_OBJECTS_COMMON) \
+  $(LIB4D)/SetRKinfo.o \
+  $(BeforeStep).o \
+  $(AfterStep).o \
+  $(AfterUpdateSoln).o \
+  $(AfterQinit).o \
+  $(AfterFullTimeStep).o \
+  $(AfterReject).o \
+  $(LstarExtra).o \
+  $(ConSoln).o \
+  $(ConstructL).o \
+  $(RiemannSolve).o \
+  $(InitApp).o \
+  $(ApplyLimiter).o \
+  $(ConvertQtoW).o \
+  $(ConvertWtoQ).o \
+  $(L2Project).o \
+  $(L2ProjectGrad).o \
+  $(L2ProjectInitialCond).o \
+  $(GetCFL).o \
+  $(DogSolveSDC).o \
+  $(DogSolveLxW).o \
+  $(DogSolveUser).o \
+  $(Output_Extra).o \
+
+LIB_CARTESIAN_OBJECTS_COMMON = \
+  $(Limiters).o \
+  $(LIB4D_CART)/DogSolverCart4.o \
+  $(LIB4D_CART)/DogParamsCart4.o \
+  $(LIB4D_CART)/DogStateCart4.o \
+  $(LIB4D_CART)/FaceData.o \
+  $(LIB4D_CART)/Legendre4d.o \
+  $(LIB4D_CART)/OutSliceCart4.o \
+  $(OutSliceExtra).o \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+endif
+
+LIB4D_SOURCES = \
+  $(DOGPACK)/lib/4d/*.h \
+  $(TOPLIB_SOURCES) \
+  $(LIB_CARTESIAN_SOURCES_COMMON) \
+  $(LIB_UNSTRUCTURED_SOURCES_COMMON) \
+  $(LIB4D)/SetRKinfo.cpp \
+  $(TOPLIB_OBJECTS) \
+  $(LIB_CARTESIAN_OBJECTS_COMMON) \
+  $(LIB_UNSTRUCTURED_OBJECTS_COMMON) \
+  $(LIB4D)/SetRKinfo.cpp \
+  $(BeforeStep).cpp \
+  $(AfterStep).cpp \
+  $(AfterUpdateSoln).cpp \
+  $(AfterQinit).cpp \
+  $(AfterFullTimeStep).cpp \
+  $(AfterReject).cpp \
+  $(LstarExtra).cpp \
+  $(ConSoln).cpp \
+  $(ConstructL).cpp \
+  $(RiemannSolve).cpp \
+  $(InitApp).cpp \
+  $(ApplyLimiter).cpp \
+  $(ConvertQtoW).cpp \
+  $(ConvertWtoQ).cpp \
+  $(L2Project).cpp \
+  $(L2ProjectGrad).cpp \
+  $(L2ProjectInitialCond).cpp \
+  $(GetCFL).cpp \
+  $(DogSolveSDC).cpp \
+  $(DogSolveLxW).cpp \
+  $(DogSolveUser).cpp \
+  $(Output_Extra).cpp \
+
+LIB_CARTESIAN_SOURCES_COMMON = \
+  $(LIB4D_CART)/*.h \
+  $(Limiters).cpp \
+  $(LIB4D_CART)/DogSolverCart4.cpp \
+  $(LIB4D_CART)/DogParamsCart4.cpp \
+  $(LIB4D_CART)/DogStateCart4.cpp \
+  $(LIB4D_CART)/L2Project.cpp \
+  $(LIB4D_CART)/FaceData.cpp \
+  $(LIB4D_CART)/Legendre4d.cpp \
+  $(LIB4D_CART)/OutSliceCart4.cpp \
+  $(OutSliceExtra).cpp \
+
+ifeq ($(COMPILE_WITH_UNST), 1)
+endif
+
+ifneq ($(COMPILE_WITH_UNST), 1)
+endif
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data

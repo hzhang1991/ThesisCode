@@ -1,0 +1,39 @@
+# Files necessary for the Poisson solver
+
+#
+# libraries this file is for
+#
+POISSON_LIB = $(DOGPACK)/scalar/lib/hybrid/lib_poisson/unst
+
+LIBPOISSON_INCLUDE = \
+  -I$(POISSON_LIB)
+
+# expand this list to include all necessary Poisson solver files
+#
+# These functions, together with the single function RhsFunc, are necessary for
+# running the Poisson library routines.
+L2Project_DG2CG_Unst            = $(POISSON_LIB)/L2Project_DG2CG_Unst
+SparseCholesky                  = $(POISSON_LIB)/SparseCholesky
+ComputeEfield                   = $(POISSON_LIB)/ComputeEfield
+Rhs2D_unst                      = $(POISSON_LIB)/Rhs2D_unst
+PoissonSolver2D_unst            = $(POISSON_LIB)/PoissonSolver2D_unst
+RhsFunc                         = $(POISSON_LIB)/RhsFunc
+
+LIBPOISSON_OBJECTS = \
+  $(L2Project_DG2CG_Unst).o \
+  $(SparseCholesky).o \
+  $(ComputeEfield).o \
+  $(Rhs2D_unst).o \
+  $(RhsFunc).o \
+  $(PoissonSolver2D_unst).o \
+
+LIBPOISSON_SOURCES = \
+  $(DOGPACK)/scalar/lib/hybrid/lib_poisson/unst/*.h \
+  $(L2Project_DG2CG_Unst).cpp \
+  $(SparseCholesky).cpp \
+  $(ComputeEfield).cpp \
+  $(Rhs2D_unst).cpp \
+  $(RhsFunc).cpp \
+  $(PoissonSolver2D_unst).cpp \
+
+#

@@ -1,0 +1,21 @@
+1. Implement dTensor6 tensors.  The Cartesian grid requires a total of 6 indices
+to be implemented in a similar fashion to previous tensors:
+
+    ( 1:mx, 1:my, 1:mz, 1:mw, 1:meqn, 1:kmax )
+
+2. Implement the "slice" functions. These include the ReadSlice and WriteSlice
+functions, as defined in the current "hybrid" code.
+
+3. Define advection speeds (this will require a bit of thought - remember to
+keep in mind we may want to use multiple species!)
+
+4. Pull the StepSL_Quiet routine from the hybrid code, and put in a
+semi-Lagrangian or the main library.
+
+5. Perform the following steps to get a working 4D code:
+
+a) Get a code that compiles (CHECK!)
+b) Print the initial conditions, and check for convergence.
+c) Think about using Vizit or HDF5?
+d) Perform advecition in quadruple periodic boundary conditions, with constant
+coefficent advection.

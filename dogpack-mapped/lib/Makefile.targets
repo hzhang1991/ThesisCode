@@ -1,0 +1,21 @@
+
+dog.exe: $(ALL_OBJECTS) $(ALL_SOURCES)
+	$(LINK) $(ALL_OBJECTS) -o dog.exe
+
+# does anyone use this any more?
+# you can also do this using: make -s ls | xargs cat > dog2program.cpp
+#program : $(ALL_SOURCES)
+#	cat $(ALL_SOURCES) > dog2program.cpp
+
+include $(DOGPACK)/lib/sys/Makefile.targets
+
+cleanout:
+	rm -rf output
+
+cleanall: cleanallo
+	rm -f $(CLEANALL_FILES)
+	rm -rf $(CLEANALL_DIRS)
+
+run:
+	time ./dog.exe -o $(output)
+

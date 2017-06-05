@@ -1,0 +1,58 @@
+
+# define standard targets for everything that inherits
+# from this library
+
+# If you really wish to make the action occasioned by a
+# particular target completely configurable, look at the example
+# for the clean target. It is desirable to minimize such
+# indirection and override-able definitions.
+#
+# To see where and how symbols get their definitions you can use
+#
+#   make -n -p | less
+
+# define general compilation rules
+#
+.cpp.o: ; $(COMPILE) $*.cpp -o $*.o
+#
+.c.o: ; $(COMPILE) $*.c -o $*.o
+#
+# (these rules are equivalent to the previous ones)
+#
+#%.o : %.c
+#	$(COMPILE) $< -o $@
+#
+#%.o : %.cpp
+#	$(COMPILE) $< -o $@
+
+# support cscope (more advanced than ctags)
+cscope:
+	ls $(ALL_SOURCES) > cscope.files
+	cscope -b -i cscope.files
+
+retags:
+	$(CTAGS) $(TAGSOURCES)
+	$(DOGPACK)/scripts/makefiletags $(TAGSOURCES) >> tags
+	LC_ALL=C sort -u tags -o tags
+
+tags: retags
+
+diff:
+	\git diff $(ALL_SOURCES)
+
+ls:
+	ls $(ALL_SOURCES)
+
+lso:
+	ls $(ALL_OBJECTS)
+
+# you would put this definition in Makefile.defs if
+# you really wanted to be able to completely override
+# what clean does.
+CLEAN_COMMANDS=rm -f $(CLEAN_FILES)
+clean: $(CLEAN_TARGETS)
+	$(CLEAN_COMMANDS)
+
+cleanallo:
+	rm -f $(ALL_OBJECTS) *.exe
+

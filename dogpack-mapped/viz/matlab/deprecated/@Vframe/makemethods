@@ -1,0 +1,58 @@
+#!/bin/sh
+echo "
+function out = ret(vframe)
+  out = vframe.s;
+end
+" > ret.m
+
+echo "
+function out = get_componentNames(vframe)
+  out = vframe.s.componentNames;
+end
+" > get_componentNames.m
+
+#echo "
+#function out = get_nameArray(vframe)
+#  out = get_nameArray(get_componentNames(subframe));
+#end
+#" > get_nameArray.m
+
+echo "
+function out = get_vector(vframe)
+  out = vframe.s.vector;
+end
+" > get_vector.m
+
+echo "
+function out = ret_parameters(vframe)
+  out = ret(vframe.s.parameters);
+end
+" > get_parameters.m
+
+echo "
+function out = get_parameters(vframe)
+  out = vframe.s.parameters;
+end
+" > get_parameters.m
+
+echo "
+function out = get_time(vframe)
+  out = vframe.s.time;
+end
+" > get_time.m
+
+echo "
+function components = get_componentIndices(frame,components)
+  if(ischar(components))
+    components=get_index(frame.componentNames, components);
+  elseif(iscell(components))
+    nameArray=components;
+    components=zeros(1,numel(nameArray));
+    for i=1:numel(nameArray)
+      % convert name to index
+      components(i)=get_index(frame.componentNames,nameArray{i});
+    end
+  end
+end
+" > get_componentIndices.m
+

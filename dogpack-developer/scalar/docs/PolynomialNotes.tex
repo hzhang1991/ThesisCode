@@ -1,0 +1,45 @@
+\documentclass[12pt]{amsart}
+\begin{document}
+
+\title{}
+\author{}
+\date{}
+\maketitle
+
+\section{4D Basis Functions}
+
+The 4D basis functions up to second order will be given by
+\begin{align}
+	\phi^{(k)} \in \left\{	1, \xi, \eta, \mu, \tau \right\}.
+\end{align}
+Here, we use the convention that the usual mappings take place between
+$(x,y,v_x, v_y) \leftrightarrow (\xi, \eta, \mu, \tau )$ for the canonical element.
+
+The Cartesian basis functions (up to second order) are given by:
+\begin{align}
+	\phi^{(k)}_{2D_{CART}} \in \left\{ 1, \sqrt{3} \mu,  \sqrt{3} \tau \right\}.
+\end{align}
+These are orthogonal with respect to
+\begin{align}
+	\frac{1}{4} \iint_{[-1,1]}^{[-1,1]} \phi^{(k)}(\mu,\tau) \phi^{(\ell)}(\mu,\tau)\, d\mu\, d\tau = \delta_{k\ell}
+\end{align}
+
+The unstructured basis functions (up to second order) are given by:
+\begin{align}
+	\phi^{(k)}_{2D_{UNST}} \in \left\{ 1, 3\sqrt{2}\xi, \sqrt{6}\left( \xi + 2\eta \right) \right\}.
+\end{align}
+These are orthogonal with respect to,
+\begin{align}
+	2 \int_{-1/3}^{1/3}\int_{-1/3}^{1/3-\xi} \phi^{(k)}(\xi,\eta) \phi^{(\ell)}(\xi,\eta)\, d\eta\, d\xi = \delta_{k\ell}.
+\end{align}
+Therefore, the 4D basis functions (up to second order), are given by,
+\begin{align}
+	\phi \in \left\{ 1, 3\sqrt{2}\xi, \sqrt{6}\left( \xi + 2\eta \right), 	 \sqrt{3} \mu,  \sqrt{3} \tau	\right\}.
+\end{align}
+The third order terms introduce extra cross terms that need to be dealt with.
+In the end, these terms are all orthogonal with respect to,
+\begin{align}
+	\frac{1}{2} \iint_{[-1,1]}^{[-1,1]} \int_{-1/3}^{1/3}\int_{-1/3}^{1/3-\xi} \phi^{(k)}(\xi,\eta, \mu, \tau) \phi^{(\ell)}(\xi,\eta, \mu, \tau)\, d\eta\, d\xi d\mu\, d\tau = \delta_{k\ell}.
+\end{align}
+
+\end{document}

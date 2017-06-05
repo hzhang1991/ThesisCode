@@ -1,0 +1,123 @@
+
+# included from application Makefiles;
+# default definitions which application Makefiles can override
+
+NDIMS=1
+include $(DOGPACK)/lib/Makefile.defs
+# library this file is in
+LIB1D = $(DOGPACK)/lib/1d/asynch
+LIB1D_INCLUDE = -I$(LIB1D) $(TOPLIB_INCLUDE)
+# inheriting libraries are expected to override this
+INCLUDE_LIBS = $(LIB1D_INCLUDE)
+
+# added to by applications
+#
+# (recall that make expands variables names when used, not when defined,
+# so it is okay that these are defined later.)
+#
+# applications are expected to override the definitions of ALL_*
+# in order to add additional files to the COMMON_* files.
+ALL_OBJECTS = $(COMMON_OBJECTS) # applications are expected to override this
+ALL_SOURCES = $(COMMON_SOURCES) # applications are expected to override this
+#
+# all applications must link to the following objects
+# (or an equivalent)
+COMMON_OBJECTS = $(OBJECTS_EXPECTED) $(LIB1D_OBJECTS)
+COMMON_SOURCES = $(SOURCES_EXPECTED) $(LIB1D_SOURCES)
+
+# default locations for expected application files
+#
+#
+# (If you want to be able to vary a particular name,
+# please do so by making definitions such as the following
+# and then overriding it in the application Makefile)
+AuxFunc         = AuxFunc
+QinitFunc       = QinitFunc
+FluxFunc        = FluxFunc
+SourceTermFunc  = SourceTermFunc
+SetWaveSpd      = SetWaveSpd
+ProjectLeftEig  = ProjectLeftEig
+ProjectRightEig = ProjectRightEig
+
+OBJECTS_EXPECTED = \
+  main.o \
+  $(AuxFunc).o \
+  $(QinitFunc).o \
+  $(FluxFunc).o \
+  $(SourceTermFunc).o \
+  $(SetWaveSpd).o \
+  $(ProjectLeftEig).o \
+  $(ProjectRightEig).o \
+
+SOURCES_EXPECTED = \
+  main.cpp \
+  $(AuxFunc).cpp \
+  $(QinitFunc).cpp \
+  $(FluxFunc).cpp \
+  $(SourceTermFunc).cpp \
+  $(SetWaveSpd).cpp \
+  $(ProjectLeftEig).cpp \
+  $(ProjectRightEig).cpp \
+
+# default library files that applications are likely to override
+#
+# (either with local or alternative library object modules)
+#
+# (Please expand this list as needed rather than overriding
+# LIBOBJECTS_COMMON in application Makefiles so that we can add
+# new object modules to the library without breaking existing
+# application Makefiles. Of course we could just define variables
+# for all the object modules in the library, but by doing it this
+# way we keep track of which object modules are currently being
+# overridden by some application)
+#
+RunDogpack           = $(LIB1D)/RunDogpack
+ConSoln              = $(LIB1D)/ConSoln
+ArtificialViscosity  = $(LIB1D)/ArtificialViscosity
+RiemannSolve         = $(LIB1D)/RiemannSolveLLF
+InitApp              = $(LIB1D)/InitApp
+DFluxFunc            = $(LIB1D)/LaxWendroff/DFluxFunc
+D2FluxFunc           = $(LIB1D)/LaxWendroff/D2FluxFunc
+L2Project            = $(LIB1D)/L2Project
+
+LIB1D_OBJECTS = \
+  $(TOPLIB_OBJECTS) \
+  $(LIB1D)/main_global.o \
+  $(RunDogpack).o \
+  $(LIB1D)/DogParamsCart1.o \
+  $(LIB1D)/DogAsynch1d.o \
+  $(L2Project).o \
+  $(ConSoln).o \
+  $(LIB1D)/DogSolveLxW_synch.o \
+  $(LIB1D)/DogSolveLxW_asynch.o \
+  $(DFluxFunc).o \
+  $(D2FluxFunc).o \
+  $(InitApp).o \
+  $(ArtificialViscosity).o \
+  $(LIB1D)/LaxWendroff/L2ProjectLxW.o \
+  $(LIB1D)/LaxWendroff/RiemannSolveLxW.o \
+  $(LIB1D)/LaxWendroff/RiemannSolveLxWupwind.o \
+  $(LIB1D)/LaxWendroff/EvalRiemmanData.o \
+
+LIB1D_SOURCES = \
+  $(TOPLIB_SOURCES) \
+  $(LIB1D)/main_global.cpp \
+  $(RunDogpack).cpp \
+  $(LIB1D)/DogParamsCart1.cpp \
+  $(LIB1D)/DogAsynch1d.cpp \
+  $(L2Project).cpp \
+  $(ConSoln).cpp \
+  $(LIB1D)/DogSolveLxW_synch.cpp \
+  $(LIB1D)/DogSolveLxW_asynch.cpp \
+  $(DFluxFunc).cpp \
+  $(D2FluxFunc).cpp \
+  $(InitApp).cpp \
+  $(ArtificialViscosity).cpp \
+  $(LIB1D)/LaxWendroff/L2ProjectLxW.cpp \
+  $(LIB1D)/LaxWendroff/RiemannSolveLxW.cpp \
+  $(LIB1D)/LaxWendroff/RiemannSolveLxWupwind.cpp \
+  $(LIB1D)/LaxWendroff/EvalRiemmanData.cpp \
+
+TAGSOURCES = $(ALL_SOURCES)
+TAGFILES = $(TAGSOURCES) *.m *.data
+

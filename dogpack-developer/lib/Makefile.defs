@@ -1,0 +1,66 @@
+# inherit from sys (sub)directory
+#
+#include $(DOGPACK)/config/Makefile.config #(by implication)
+include $(DOGPACK)/lib/sys/Makefile.defs
+
+# where this library lives
+TOPLIB = $(DOGPACK)/lib
+
+LFLAGS = $(HDF5_LIBRARIES)
+
+# define inherited symbols
+#
+TOPLIB_INCLUDE = -I$(TOPLIB) $(LIB_SYS_INCLUDE)
+#
+
+RunStartScript = $(TOPLIB)/RunStartScript
+
+TOPLIB_OBJECTS = \
+  $(LIB_SYS_OBJECTS) \
+  $(TOPLIB)/dog_ini.o \
+  $(TOPLIB)/DogParams.o \
+  $(TOPLIB)/DogState.o \
+  $(TOPLIB)/DogSolver.o \
+  $(TOPLIB)/Positivity.o \
+  $(TOPLIB)/basics.o \
+  $(TOPLIB)/tensors.o \
+  $(TOPLIB)/dog_math.o \
+  $(TOPLIB)/dog_str.o \
+  $(TOPLIB)/dog_io.o \
+  $(TOPLIB)/GaussElim.o \
+  $(TOPLIB)/QuickSort.o \
+  $(TOPLIB)/Quadrature.o \
+  $(RunStartScript).o \
+#
+TOPLIB_SOURCES = \
+  $(LIB_SYS_SOURCES) \
+  $(TOPLIB)/*.h \
+  $(TOPLIB)/dog_ini.cpp \
+  $(TOPLIB)/DogParams.cpp \
+  $(TOPLIB)/DogState.cpp \
+  $(TOPLIB)/DogSolver.cpp \
+  $(TOPLIB)/basics.cpp \
+  $(TOPLIB)/tensors.cpp \
+  $(TOPLIB)/dog_math.cpp \
+  $(TOPLIB)/dog_str.cpp \
+  $(TOPLIB)/dog_io.cpp \
+  $(TOPLIB)/GaussElim.cpp \
+  $(TOPLIB)/QuickSort.cpp \
+  $(TOPLIB)/Quadrature.cpp \
+  $(RunStartScript).cpp \
+
+# inheriting libraries and applications are expected to override these
+INCLUDE_LIBS= $(TOPLIB_INCLUDE)
+ALL_SOURCES = $(TOPLIB_SOURCES)
+ALL_OBJECTS = $(TOPLIB_OBJECTS)
+
+CLEAN_FILES = *.o
+
+CLEANALL_FILES = \
+	*.log *.aux *.dvi *.pdf \
+	*.o \
+	dog.exe \
+    tags \
+
+CLEANALL_DIRS = output*
+

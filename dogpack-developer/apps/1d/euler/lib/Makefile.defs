@@ -1,0 +1,45 @@
+# The purpose of this library is to consolidate common functions used in each
+# "application".  For example, the flux function for each "advection"
+# application remains the same, the usual thing one wishes to modify are the
+# initial conditions.
+#
+# LIBRARY for 1D Euler Equations
+#
+
+APP_NAME  = euler
+APP_LIB   = $(DOGPACK)/apps/1d/$(APP_NAME)/lib
+
+# Flux function, and its derivatives
+FluxFunc    = $(APP_LIB)/FluxFunc
+
+# These time derivatives are required for the Lax-Wendroff (and
+# two-derivative) code:
+DFluxFunc   = $(APP_LIB)/DFluxFunc
+D2FluxFunc  = $(APP_LIB)/D2FluxFunc
+
+# Eigen decomposition of the Flux function
+ProjectLeftEig   = $(APP_LIB)/ProjectLeftEig
+ProjectRightEig  = $(APP_LIB)/ProjectRightEig
+
+# Wave speed functions
+SetWaveSpd       = $(APP_LIB)/SetWaveSpd
+
+# Auxilary function
+AuxFunc     = $(APP_LIB)/AuxFunc
+
+# MPP-Positivity limiter.  This needs to be defined for each application that
+# wishes to use it.
+ApplyPosMPPLimiter   = $(APP_LIB)/ApplyPosMPPLimiter
+
+#
+ApplyPosLimiter      = $(APP_LIB)/ApplyPosLimiter
+
+# place to add objects and sources
+#
+APP_LIB_OBJECTS = \
+
+#
+APP_LIB_SOURCES = \
+
+#
+INCLUDE_LIBS = -I $(APP_LIB) $(LIB1D_INCLUDE)

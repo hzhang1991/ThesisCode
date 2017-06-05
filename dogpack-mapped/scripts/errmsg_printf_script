@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# email message to user.
+#
+# This script could be configured to include
+# more information in the error message.
+
+user=`whoami`
+machine=`hostname`
+message="$1"
+unsubscribe="
+
+  to quit getting these emails comment out the last line in ${0}"
+
+mail=mail
+# uncomment the next line to email a copy of the error
+# message to the user.
+echo "Error on machine $machine: $message $unsubscribe" | $mail -s "error message from machine $machine" "$user"
+

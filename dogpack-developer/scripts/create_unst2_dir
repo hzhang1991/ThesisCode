@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# create Unstructured_Mesh directory if it does not exist
+if test ! -d Unstructured_Mesh;
+  then mkdir Unstructured_Mesh; cd Unstructured_Mesh; 
+       cp $DOGPACK/lib/2d/unst/MeshGenFiles/GridSpacing.cpp .;
+       cp $DOGPACK/lib/2d/unst/MeshGenFiles/SignedDistance.cpp .;
+       cp $DOGPACK/lib/2d/unst/MeshGenFiles/main.cpp .;
+       cp $DOGPACK/lib/2d/unst/MeshGenFiles/input2D.data .;
+       cp $DOGPACK/lib/2d/unst/MeshGenFiles/Makefile .;
+       cd ..;
+       git add Unstructured_Mesh
+else
+    echo ' ';
+    echo '   Unstructured_Mesh already exists ...';
+    echo '   This script will do nothing ... ';
+    echo ' ';
+fi
+
+

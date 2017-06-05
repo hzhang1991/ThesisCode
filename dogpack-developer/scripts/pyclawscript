@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#outputdir=output
+
+#if [ $# -gt 0 ];
+#then
+py_outputdir="$1";
+#fi
+# create output directory if it does not exist
+if test ! -d $py_outputdir;
+  then mkdir $py_outputdir;
+fi
+

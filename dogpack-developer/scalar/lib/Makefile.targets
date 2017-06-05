@@ -1,0 +1,14 @@
+dog.exe: $(ALL_OBJECTS) $(ALL_SOURCES)
+	$(LINK) $(ALL_OBJECTS) -o dog.exe
+
+include $(DOGPACK)/scalar/lib/sys/Makefile.targets
+
+cleanout:
+	rm -rf output
+
+cleanall: cleanallo
+	rm -f  $(CLEANALL_FILES)
+	rm -rf $(CLEANALL_DIRS)
+
+run:
+	time ./dog.exe -o $(output)

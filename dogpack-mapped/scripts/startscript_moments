@@ -1,0 +1,34 @@
+#!/bin/sh
+
+outputdir="$1";
+dims="$2";
+
+# create output directory if it does not exist
+if test ! -d $outputdir;
+  then mkdir $outputdir;
+fi
+
+if test -f Makefile; then
+   morefiles="Makefile $morefiles";
+fi
+if test -f Initialize.cpp; then
+   morefiles="Initialize.cpp $morefiles";
+fi
+if test -f mesh.dat; then
+   morefiles="mesh.dat $morefiles";
+fi
+cp $morefiles parameters.ini $outputdir;
+# copy information sufficient to reconstruct the
+# code used to generate the data
+make -s diff > $outputdir/svn_diff
+make -s info > $outputdir/svn_info
+#\svn info -R > $outputdir/svn_info
+#\svn diff > $outputdir/svn_diff
+#\svn info -R ${DOGPACK}/${dims}d/lib >> $outputdir/svn_info
+#\svn diff ${DOGPACK}/${dims}d/lib >> $outputdir/svn_diff
+
+# ----------- Moment information -----------
+outputdir_moment="output_moments"
+if test ! -d $outputdir_moment;
+  then mkdir $outputdir_moment;
+fi
